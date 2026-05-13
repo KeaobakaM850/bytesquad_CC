@@ -71,6 +71,37 @@ col2.metric("Categories", df_filtered["category"].nunique())
 col3.metric("Countries", df_filtered["Country"].nunique())
 col4.metric("Models", df_filtered["Model Type"].nunique())
 
+st.header("Country → Policy → Bias Category Sunburst")
+
+dfwCntry.columns = dfwCntry.columns.str.strip()
+
+df_clean = dfwCntry.dropna(
+    subset=["Country", "filename", "Category", "Score"]
+)
+
+sunburst_data = (
+    df_clean
+    .groupby(["Country", "filename", "Category"])["Score"]
+    .mean()
+    .reset_index()
+)
+
+sunburst_data = sunburst_data[sunburst_data["Score"] != 0]
+
+fig = px.sunburst(
+    sunburst_data,
+    path=["Country", "filename", "Category"],
+    values="Score",
+    color="Score",
+    color_continuous_scale="YlOrRd"
+)
+
+fig.update_layout(
+    title="Country → Policy → Bias Category Sunburst"
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
 st.header("Score distribution by Model")
 
 fig, ax = plt.subplots()
