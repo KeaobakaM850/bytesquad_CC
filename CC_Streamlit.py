@@ -76,12 +76,12 @@ st.header("Country → Policy → Bias Category Sunburst")
 dfwCntry.columns = dfwCntry.columns.str.strip()
 
 df_clean = dfwCntry.dropna(
-    subset=["Country", "filename", "Category", "Score"]
+    subset=["Country", "filename", "category", "Score"]
 )
 
 sunburst_data = (
     df_clean
-    .groupby(["Country", "filename", "Category"])["Score"]
+    .groupby(["Country", "filename", "category"])["Score"]
     .mean()
     .reset_index()
 )
@@ -90,7 +90,7 @@ sunburst_data = sunburst_data[sunburst_data["Score"] != 0]
 
 fig = px.sunburst(
     sunburst_data,
-    path=["Country", "filename", "Category"],
+    path=["Country", "filename", "category"],
     values="Score",
     color="Score",
     color_continuous_scale="YlOrRd"
