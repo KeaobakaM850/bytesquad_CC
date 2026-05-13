@@ -206,6 +206,7 @@ st.header("Bias Category Trends Over Time")
 
 dfwCntry["Year"] = dfwCntry["filename"].astype(str).str.extract(r'(\d{4})')
 dfwCntry["Year"] = pd.to_numeric(dfwCntry["Year"], errors="coerce")
+dfwCntry = dfwCntry[dfwCntry["Year"] >= 1994]
 df_time = dfwCntry.dropna(subset=["Year"])
 
 heatmap_data = df_time.pivot_table(
