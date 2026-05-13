@@ -209,7 +209,22 @@ dfwCntry["Year"] = pd.to_numeric(dfwCntry["Year"], errors="coerce")
 dfwCntry = dfwCntry[dfwCntry["Year"] >= 1994]
 df_time = dfwCntry.dropna(subset=["Year"])
 
-heatmap_data = df_time.pivot_table(
+min_year = int(df_time["Year"].min())
+max_year = int(df_time["Year"].max())
+
+year_range = st.slider(
+    "Select Year Range",
+    min_value = min_year,
+    max_value = max_year,
+    value=(1994,2050)
+)
+
+filtered_df = df_time[
+    (df_time["Year"] >= year_range[0]) &
+    (df_time["Year"] <= year_range[1])
+]
+
+heatmap_data = filtered_df.pivot_table(
     index="category",
     columns="Year",
     values="Score",
