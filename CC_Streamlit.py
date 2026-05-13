@@ -157,9 +157,9 @@ if "Country" in df_filtered.columns:
 
 st.header("Policy-Level Bias Profile")
 
-policy = st.selectbox("Select Policy", df["filename"].dropna().unique())
+policy = st.selectbox("Select Policy", dfwCntry["filename"].dropna().unique())
 
-policy_df = df[df["filename"] == policy]
+policy_df = dfwCntry[dfwCntry["filename"] == policy]
 
 if policy_df.empty:
     st.warning("No data available for the selected policy.")
@@ -204,9 +204,9 @@ else:
 
 st.header("Bias Category Trends Over Time")
 
-df["Year"] = df["filename"].astype(str).str.extract(r'(\d{4})')
-df["Year"] = pd.to_numeric(df["Year"], errors="coerce")
-df_time = df.dropna(subset=["Year"])
+dfwCntry["Year"] = dfwCntry["filename"].astype(str).str.extract(r'(\d{4})')
+dfwCntry["Year"] = pd.to_numeric(dfwCntry["Year"], errors="coerce")
+df_time = dfwCntry.dropna(subset=["Year"])
 
 heatmap_data = df_time.pivot_table(
     index="category",
