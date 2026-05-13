@@ -24,7 +24,7 @@ st.set_page_config(layout="wide")
 st.title("Climate Change Policy Bias over time across SADC")
 
 #Load data
-drive.mount('/content/drive')
+#drive.mount('/content/drive')
 #df = pd.read_excel("/content/drive/MyDrive/MIT 808 Byte Squad/Colab/Streamlit Deployment/Overall Model Results.xlsx") # need a point that can read the xlsx file to a dataframe, append the new results, and write back to xslx file before showing results
 dfwCntry = pd.read_excel("Overall Model Results w Country.xlsx")
 
