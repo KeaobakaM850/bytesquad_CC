@@ -65,6 +65,8 @@ df_filtered = dfwCntry[
     (dfwCntry["Country"].isin(countries))
 ]
 
+col1, col2 = st.column(2)
+
 col1,col2,col3, col4 = st.columns(4)
 col1.metric("Total Records", len(df_filtered))
 col2.metric("Categories", df_filtered["category"].nunique())
@@ -88,7 +90,7 @@ sunburst_data = (
 
 sunburst_data = sunburst_data[sunburst_data["Score"] != 0]
 
-fig = px.sunburst(
+fig1 = px.sunburst(
     sunburst_data,
     path=["Country", "filename", "category"],
     values="Score",
@@ -96,11 +98,12 @@ fig = px.sunburst(
     color_continuous_scale="YlOrRd"
 )
 
-fig.update_layout(
+fig1.update_layout(
     title="Country → Policy → Bias Category Sunburst"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+with col1:
+    st.plotly_chart(fig1, use_container_width=True)
 
 st.header("Score distribution by Model")
 
@@ -109,16 +112,19 @@ sns.boxplot(data=df_filtered, x="Model Type", y="Score", ax=ax)
 ax.set_title("Distribution of Scores by Model Type")
 ax.set_xlabel("Model Type")
 ax.set_ylabel("Score")
-st.pyplot(fig)
+
+with col2:
+    st.pyplot(fig)
 
 st.header("Category Distribution by Source")
 
-fig, ax = plt.subplots()
+fig2, ax = plt.subplots()
 sns.countplot(hue='source_type', y='category', data=df_filtered, ax=ax)
 ax.set_title('Category Distribution by Source Type')
 ax.set_xlabel('Count')
 ax.set_ylabel('category')
-st.pyplot(fig)
+with col1:
+    st.pyplot(fig2)
 
 st.header("Score Distribution")
 
@@ -127,7 +133,8 @@ sns.histplot(df_filtered['Score'], bins=20, kde=True, ax=ax)
 ax.set_title('Distribution of Scores')
 ax.set_xlabel('Score')
 ax.set_ylabel('Frequency')
-st.pyplot(fig3)
+with col2:
+    st.pyplot(fig3)
 
 #5
 st.header("Average Score by Category")
@@ -136,7 +143,8 @@ avg_scores = df_filtered.groupby('category')['Score'].mean().sort_values()
 
 fig4, ax = plt.subplots()
 avg_scores.plot(kind='barh', ax=ax)
-st.pyplot(fig4)
+with col1:
+    st.pyplot(fig4)
 
 #6
 st.header("Category vs Model (Average Score)")
@@ -148,14 +156,15 @@ pivot = df_filtered.pivot_table(
     aggfunc='mean'
 )
 
-fig = px.imshow(
+fig5 = px.imshow(
     pivot,
     text_auto=True,
     aspect="auto",
     title="Category vs Model (Average Score)"
 )
 
-st.plotly_chart(fig, use_container_width=True)
+with col2:
+    st.plotly_chart(fig5, use_container_width=True)
 
 st.header("Top Countries v Category")
 
@@ -165,26 +174,28 @@ if "Country" in df_filtered.columns:
 
     df_top = dfwCntry[dfwCntry["Country"].isin(top)]
     pivot = pd.crosstab(df_top["Country"], df_top["category"])
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig6, ax = plt.subplots(figsize=(10, 6))
     pivot.plot(kind="bar",
                stacked=True,
                ax=ax)
     plt.xticks(rotation=45)
-    st.pyplot(fig)
+with col1:
+    st.pyplot(fig6)
 
 st.header("Country vs Category (Proportion)")
 
 if "Country" in df_filtered.columns:
     pivot_norm = pivot.div(pivot.sum(axis=1), axis=0)
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig7, ax = plt.subplots(figsize=(10, 6))
     sns.heatmap(
         pivot_norm,
         annot=True,
         cmap="coolwarm",
         ax=ax
     )
-    st.pyplot(fig)
+with col2:
+    st.pyplot(fig7)
 
 st.header("Policy-Level Bias Profile")
 
@@ -213,7 +224,7 @@ else:
   ).tolist()
   angles += angles[:1]
 
-  fig, ax = plt.subplots(
+  fig8, ax = plt.subplots(
       figsize=(7,7),
       subplot_kw=dict(polar=True)
   )
@@ -230,8 +241,8 @@ else:
   ax.set_xticks(angles[:-1])
   ax.set_xticklabels(categories_list)
   ax.set_ylim(0,5)
-
-  st.pyplot(fig)
+with col1:
+  st.pyplot(fig8)
 
 st.header("Bias Category Trends Over Time")
 
@@ -262,7 +273,7 @@ heatmap_data = filtered_df.pivot_table(
     aggfunc="mean"
 )
 
-fig, ax = plt.subplots(figsize=(12,6))
+fig9, ax = plt.subplots(figsize=(12,6))
 sns.heatmap(
     heatmap_data,
     annot=True,
@@ -277,7 +288,10 @@ ax.set_title(
 )
 ax.set_xlabel("Policy Year")
 ax.set_ylabel("Bias Category")
-st.pyplot(fig)
+with col2:
+    st.pyplot(fig9)
+
+
 
 
 #!streamlit run /content/drive/MyDrive/MIT 808 Byte Squad/Colab/Streamlit Deployment/app.ipynb &>/content/drive/MyDrive/MIT 808 Byte Squad/Colab/Streamlit Deployment/logs.txt &
