@@ -73,7 +73,8 @@ col2.metric("Categories", df_filtered["category"].nunique())
 col3.metric("Countries", df_filtered["Country"].nunique())
 col4.metric("Models", df_filtered["Model Type"].nunique())
 
-st.header("Country → Policy → Bias Category Sunburst")
+with col1:
+    st.header("Country → Policy → Bias Category Sunburst")
 
 dfwCntry.columns = dfwCntry.columns.str.strip()
 
@@ -98,14 +99,16 @@ fig1 = px.sunburst(
     color_continuous_scale="YlOrRd"
 )
 
-fig1.update_layout(
+with col1:
+    fig1.update_layout(
     title="Country → Policy → Bias Category Sunburst"
-)
+    )
 
 with col1:
     st.plotly_chart(fig1, use_container_width=True)
 
-st.header("Score distribution by Model")
+with col2:
+    st.header("Score distribution by Model")
 
 fig, ax = plt.subplots()
 sns.boxplot(data=df_filtered, x="Model Type", y="Score", ax=ax)
