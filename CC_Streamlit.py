@@ -65,7 +65,7 @@ df_filtered = dfwCntry[
     (dfwCntry["Country"].isin(countries))
 ]
 
-col1, col2 = st.column(2)
+col1, col2 = st.columns(2)
 
 col1,col2,col3, col4 = st.columns(4)
 col1.metric("Total Records", len(df_filtered))
