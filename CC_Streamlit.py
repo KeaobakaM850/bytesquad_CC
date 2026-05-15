@@ -101,7 +101,7 @@ fig1 = px.sunburst(
 
 with col1:
     fig1.update_layout(
-    title="Country → Policy → Bias Category Sunburst"
+    title="Country → Policy → Bias Category Sunburst", 
     )
 
 with col1:
@@ -175,16 +175,17 @@ with col1:
     st.header("Top Countries v Category")
 
 if "Country" in df_filtered.columns:
-    top_n = st.slider("Top N Countries", 5, 20, 10)
-    top = df_filtered['Country'].value_counts().head(top_n).index
+    with col1:
+        top_n = st.slider("Top N Countries", 5, 20, 10)
+        top = df_filtered['Country'].value_counts().head(top_n).index
 
-    df_top = dfwCntry[dfwCntry["Country"].isin(top)]
-    pivot = pd.crosstab(df_top["Country"], df_top["category"])
-    fig6, ax = plt.subplots(figsize=(10, 6))
-    pivot.plot(kind="bar",
+        df_top = dfwCntry[dfwCntry["Country"].isin(top)]
+        pivot = pd.crosstab(df_top["Country"], df_top["category"])
+        fig6, ax = plt.subplots(figsize=(10, 6))
+        pivot.plot(kind="bar",
                stacked=True,
                ax=ax)
-    plt.xticks(rotation=45)
+        plt.xticks(rotation=45)
 with col1:
     st.pyplot(fig6)
 
@@ -206,8 +207,8 @@ with col2:
 
 with col1:
     st.header("Policy-Level Bias Profile")
-
-policy = st.selectbox("Select Policy", dfwCntry["filename"].dropna().unique())
+with col1:
+    policy = st.selectbox("Select Policy", dfwCntry["filename"].dropna().unique())
 
 policy_df = dfwCntry[dfwCntry["filename"] == policy]
 
@@ -263,11 +264,12 @@ df_time = dfwCntry.dropna(subset=["Year"])
 min_year = int(df_time["Year"].min())
 max_year = int(df_time["Year"].max())
 
-year_range = st.slider(
-    "Select Year Range",
-    min_value = min_year,
-    max_value = max_year,
-    value=(1994,2050)
+with col2:
+    year_range = st.slider(
+        "Select Year Range",
+        min_value = min_year,
+        max_value = max_year,
+        value=(1994,2050)
 )
 
 filtered_df = df_time[
