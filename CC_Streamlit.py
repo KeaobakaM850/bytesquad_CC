@@ -65,7 +65,7 @@ df_filtered = dfwCntry[
     (dfwCntry["Country"].isin(countries))
 ]
 
-col1, col2 = st.column(2)
+col1, col2 = st.columns([1,1])
 
 col1,col2,col3, col4 = st.columns(4)
 col1.metric("Total Records", len(df_filtered))
@@ -73,7 +73,8 @@ col2.metric("Categories", df_filtered["category"].nunique())
 col3.metric("Countries", df_filtered["Country"].nunique())
 col4.metric("Models", df_filtered["Model Type"].nunique())
 
-st.header("Country → Policy → Bias Category Sunburst")
+with col1:
+    st.header("Country → Policy → Bias Category Sunburst")
 
 dfwCntry.columns = dfwCntry.columns.str.strip()
 
@@ -98,14 +99,16 @@ fig1 = px.sunburst(
     color_continuous_scale="YlOrRd"
 )
 
-fig1.update_layout(
-    title="Country → Policy → Bias Category Sunburst"
-)
+with col1:
+    fig1.update_layout(
+    title="Country → Policy → Bias Category Sunburst", 
+    )
 
 with col1:
     st.plotly_chart(fig1, use_container_width=True)
 
-st.header("Score distribution by Model")
+with col2:
+    st.header("Score distribution by Model")
 
 fig, ax = plt.subplots()
 sns.boxplot(data=df_filtered, x="Model Type", y="Score", ax=ax)
@@ -116,7 +119,8 @@ ax.set_ylabel("Score")
 with col2:
     st.pyplot(fig)
 
-st.header("Category Distribution by Source")
+with col1:
+    st.header("Category Distribution by Source")
 
 fig2, ax = plt.subplots()
 sns.countplot(hue='source_type', y='category', data=df_filtered, ax=ax)
@@ -126,7 +130,8 @@ ax.set_ylabel('category')
 with col1:
     st.pyplot(fig2)
 
-st.header("Score Distribution")
+with col2:
+    st.header("Score Distribution")
 
 fig3, ax = plt.subplots()
 sns.histplot(df_filtered['Score'], bins=20, kde=True, ax=ax)
@@ -136,8 +141,8 @@ ax.set_ylabel('Frequency')
 with col2:
     st.pyplot(fig3)
 
-#5
-st.header("Average Score by Category")
+with col1:
+    st.header("Average Score by Category")
 
 avg_scores = df_filtered.groupby('category')['Score'].mean().sort_values()
 
@@ -146,8 +151,8 @@ avg_scores.plot(kind='barh', ax=ax)
 with col1:
     st.pyplot(fig4)
 
-#6
-st.header("Category vs Model (Average Score)")
+with col2:
+    st.header("Category vs Model (Average Score)")
 
 pivot = df_filtered.pivot_table(
     index='category',
@@ -166,7 +171,8 @@ fig5 = px.imshow(
 with col2:
     st.plotly_chart(fig5, use_container_width=True)
 
-st.header("Top Countries v Category")
+with col1:
+    st.header("Top Countries v Category")
 
 if "Country" in df_filtered.columns:
     top_n = st.slider("Top N Countries", 5, 20, 10)
@@ -182,7 +188,8 @@ if "Country" in df_filtered.columns:
 with col1:
     st.pyplot(fig6)
 
-st.header("Country vs Category (Proportion)")
+with col2:
+    st.header("Country vs Category (Proportion)")
 
 if "Country" in df_filtered.columns:
     pivot_norm = pivot.div(pivot.sum(axis=1), axis=0)
@@ -197,7 +204,8 @@ if "Country" in df_filtered.columns:
 with col2:
     st.pyplot(fig7)
 
-st.header("Policy-Level Bias Profile")
+with col1:
+    st.header("Policy-Level Bias Profile")
 
 policy = st.selectbox("Select Policy", dfwCntry["filename"].dropna().unique())
 
@@ -244,7 +252,8 @@ else:
 with col1:
   st.pyplot(fig8)
 
-st.header("Bias Category Trends Over Time")
+with col2:
+    st.header("Bias Category Trends Over Time")
 
 dfwCntry["Year"] = dfwCntry["filename"].astype(str).str.extract(r'(\d{4})')
 dfwCntry["Year"] = pd.to_numeric(dfwCntry["Year"], errors="coerce")
