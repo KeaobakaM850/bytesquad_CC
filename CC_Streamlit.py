@@ -101,7 +101,7 @@ fig1 = px.sunburst(
 
 with col1:
     fig1.update_layout(
-    title="Country → Policy → Bias Category Sunburst", 
+    title="Country → Policy → Bias Category Sunburst"
     )
 
 with col1:
